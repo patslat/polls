@@ -4,4 +4,8 @@ class Question < ActiveRecord::Base
   has_many :answers
   has_many :responses, :through => :answers
   has_many :responders, :through => :responses
+  validates :body, :presence => true
+  validates :poll_id, :presence => true
+
+
 end

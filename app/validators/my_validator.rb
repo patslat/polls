@@ -7,5 +7,6 @@ class MyValidator < ActiveModel::Validator
     if record.answer.question.responders.include?(record.responder)
       record.errors[:responder_id] << "You've already answered this question!"
     end
+
   end
 end
