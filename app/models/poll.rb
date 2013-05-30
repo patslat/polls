@@ -9,22 +9,26 @@ class Poll < ActiveRecord::Base
   validates :name, :uniqueness => true
 
   def return_results
-    self.questions.each do |question|
+    qs = self.questions.includes(:answers, :responses)
+    qs.each do |question|
       puts question.body
       question.answers.each do |answer|
-        print "Answer: #{answer.body}, Count: #{answer.responses.count}\n"
+        resps = answer.responses
+        print "Answer: #{answer.body}, Count: #{resps.length}\n"
       end
     end
   end
 
   def take_poll(user)
-    questions.each do |question|
+    qs = self.questions.includes(:answers)
+    qs.each do |question|
       puts question.body
-      question.answers.each_with_index do |answer, index|
+      as = question.answers
+      as.each_with_index do |answer, index|
         puts "(#{index}) =>  #{answer.body}"
       end
       begin
-      Response.get_response(question, user)
+      Response.get_response(as, user)
       rescue
         print "Please choose one of the response options: "
         retry
